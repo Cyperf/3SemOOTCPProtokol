@@ -4,6 +4,14 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
 
+
+void ChooseUser() { 
+Console.WriteLine("Server or User?");
+string who = Console.ReadLine();
+
+if (who.ToLower() == "server") 
+{ 
+
 Console.WriteLine("TCP Server:");
 
 TcpListener listener = new TcpListener(IPAddress.Any, 21);
@@ -16,94 +24,108 @@ Task.Run(()=>HandleClient(socket));
 }
 
 void HandleClient(TcpClient socket)
-{
-    NetworkStream ns = socket.GetStream();
+    {
+        NetworkStream ns = socket.GetStream();
 
-    StreamReader reader = new StreamReader(ns);
-    StreamWriter writer = new StreamWriter(ns);
+        StreamReader reader = new StreamReader(ns);
+        StreamWriter writer = new StreamWriter(ns);
 
-    bool keepListening = true;
+        bool keepListening = true;
 
-    while (keepListening)
-    { 
-        string message = reader.ReadLine();
-
-        Console.WriteLine("Client send: " + message);
-
-        writer.WriteLine(message);
-        writer.Flush();
-
-        switch (message.ToLower())
+        while (keepListening)
         {
-            case "stop":
-                writer.WriteLine("Goodbye");
-                writer.Flush();
-                keepListening = false;
-                break;
+            string message = reader.ReadLine();
 
-            case "random":
-                writer.WriteLine(HandleNumbers("random"));
-                writer.Flush();
-                break;
+            Console.WriteLine("Client send: " + message);
 
-            case "add":
-                writer.WriteLine(HandleNumbers("add"));
-                writer.Flush();
-                break;
+            writer.WriteLine(message);
+            writer.Flush();
 
-            case "subtract":
-                writer.WriteLine(HandleNumbers("subtract"));
-                writer.Flush();
-                break;
+            switch (message.ToLower())
+            {
+                case "stop":
+                    writer.WriteLine("Goodbye");
+                    writer.Flush();
+                    keepListening = false;
+                    break;
 
-            default: 
-                writer.WriteLine("Invalid command. The available commands are: Add, Subtract, Random or Stop");
+                case "random":
+                    writer.WriteLine(HandleNumbers("random"));
+                    writer.Flush();
+                    break;
+
+                case "add":
+                    writer.WriteLine(HandleNumbers("add"));
+                    writer.Flush();
+                    break;
+
+                case "subtract":
+                    writer.WriteLine(HandleNumbers("subtract"));
+                    writer.Flush();
+                    break;
+
+                default:
+                    writer.WriteLine("Invalid command. The available commands are: Add, Subtract, Random or Stop");
+                    writer.Flush();
+                    break;
+            }
+        }
+
+        int HandleNumbers(string type)
+        {
+            int number1 = 0;
+            int number2 = 0;
+
+
+            Random randomNumber = new Random();
+
+            writer.WriteLine("Input numbers");
+            writer.Flush();
+            string numbers = reader.ReadLine();
+            var splitNumbers = numbers.Split(' ');
+
+            if (splitNumbers.Length == 2)
+            {
+                int.TryParse(splitNumbers[0], out number1);
+                int.TryParse(splitNumbers[1], out number2);
+            }
+            else
+            {
+                writer.WriteLine("Invalid input");
                 writer.Flush();
-                break;
+            }
+
+            switch (type)
+            {
+
+                case "random":
+                        if (number1 < number2) { 
+                    return randomNumber.Next(number1, number2) + 1;
+                        }
+                        return randomNumber.Next(number2, number1) + 1;
+
+                    case "add":
+
+                    return number1 + number2;
+
+                case "subtract":
+
+                    return number1 - number2;
+
+            }
+            return 0;
         }
     }
     
-    int HandleNumbers(string type)
-    {
-        int number1 = 0;
-        int number2 = 0;
-        
+} 
+else if (who.ToLower() == "user")
+{
 
-        Random randomNumber = new Random();
-
-        writer.WriteLine("Input numbers");
-        writer.Flush();
-        string numbers = reader.ReadLine();
-        var splitNumbers = numbers.Split(' ');
-
-        if (splitNumbers.Length == 2 ) { 
-        int.TryParse(splitNumbers[0], out number1);
-        int.TryParse(splitNumbers[1], out number2);
-        } 
-        else
-        {
-            writer.WriteLine("Invalid input");
-            writer.Flush();
-        }
-
-        switch (type) 
-        {
-
-            case "random":
-
-                return randomNumber.Next(number1,number2)+1;         
-
-            case "add":
-
-                return number1+number2;
-
-            case "subtract":
-
-                return number1 - number2;
-                    
-        }
-        return 0;
-    }
-
-    socket.Close();
+} else
+{
+    Console.WriteLine("Invalid input.");
+        ChooseUser();
 }
+}
+
+ChooseUser();
