@@ -79,7 +79,6 @@ void ChooseUser()
 
             int HandleNumbers(string type)
             {
-                writer.Flush();
                 int number1 = 0;
                 int number2 = 0;
 
@@ -99,8 +98,10 @@ void ChooseUser()
                 }
                 else
                 {
+                    Console.WriteLine("User did something wrong");
                     writer.WriteLine("Invalid input");
                     writer.Flush();
+                    HandleNumbers(type);
                 }
 
                 switch (type)
@@ -154,6 +155,7 @@ void ChooseUser()
             writer.Flush();
 
             string response = reader.ReadLine();
+
             Console.WriteLine(response);
 
             if (message.ToLower() == "stop")
@@ -162,6 +164,7 @@ void ChooseUser()
                 writer.Flush();
                 connected = false;
             }
+
         }
 
 
