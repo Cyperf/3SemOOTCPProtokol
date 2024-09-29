@@ -143,8 +143,7 @@ void ChooseUser()
         StreamWriter writer = new StreamWriter(ns);
         writer.WriteLine("User connected");
         writer.Flush();
-        
-
+        Console.WriteLine(reader.ReadLine());
         connected = true;
         
         while (connected) 
@@ -152,11 +151,9 @@ void ChooseUser()
             string message = Console.ReadLine();
 
             writer.WriteLine(message);
-
             writer.Flush();
 
             string response = reader.ReadLine();
-
             Console.WriteLine(response);
 
             if (message.ToLower() == "stop")
@@ -165,8 +162,6 @@ void ChooseUser()
                 writer.Flush();
                 connected = false;
             }
-
-            client.Close();
         }
 
 
