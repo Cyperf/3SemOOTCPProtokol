@@ -82,7 +82,6 @@ void ChooseUser()
                 int number1 = 0;
                 int number2 = 0;
 
-
                 Random randomNumber = new Random();
 
                 writer.WriteLine("Input numbers");
@@ -95,39 +94,35 @@ void ChooseUser()
                 {
                     int.TryParse(splitNumbers[0], out number1);
                     int.TryParse(splitNumbers[1], out number2);
+                    switch (type)
+                    {
+                        case "random":
+                            if (number1 < number2)
+                            {
+                                return randomNumber.Next(number1, number2) + 1;
+                            }
+                            return randomNumber.Next(number2, number1) + 1;
+
+                        case "add":
+
+                            return number1 + number2;
+
+                        case "subtract":
+
+                            return number1 - number2;
+
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("User did something wrong");
-                    writer.WriteLine("Invalid input");
-                    writer.Flush();
-                    HandleNumbers(type);
-                }
-
-                switch (type)
-                {
-
-                    case "random":
-                        if (number1 < number2)
-                        {
-                            return randomNumber.Next(number1, number2) + 1;
-                        }
-                        return randomNumber.Next(number2, number1) + 1;
-
-                    case "add":
-
-                        return number1 + number2;
-
-                    case "subtract":
-
-                        return number1 - number2;
-
+                    return 0;
                 }
                 return 0;
             }
         }
 
     }
+
     else if (who.ToLower() == "user")
     {
         TcpClient client = new TcpClient();
