@@ -38,14 +38,13 @@ void ChooseUser()
 
             while (keepListening)
             {
-                string message = reader.ReadLine();
+                string? message = reader.ReadLine();
 
                 Console.WriteLine("Client send: " + message);
 
                 switch (message.ToLower())
                 {
                     case "user connected":
-                        Console.WriteLine("Server just sent welcome message");
                         writer.WriteLine("Welcome. The available commands are: Add, Subtract, Random or Stop");
                         writer.Flush();
                         break;
@@ -138,14 +137,13 @@ void ChooseUser()
         client.Connect("127.0.0.1", 21);
         NetworkStream stream = client.GetStream();
         NetworkStream ns = client.GetStream();
-        //The StreamReader is an easier way to read data from a Stream, it uses the NetworkStream
+        
         StreamReader reader = new StreamReader(ns);
-        //The StreamWriter is an easier way to write data to a Stream, it uses the NetworkStream
+       
         StreamWriter writer = new StreamWriter(ns);
         writer.WriteLine("User connected");
         writer.Flush();
-        string response = reader.ReadLine();
-        Console.WriteLine(response);
+        
 
         connected = true;
         
@@ -156,6 +154,8 @@ void ChooseUser()
             writer.WriteLine(message);
 
             writer.Flush();
+
+            string response = reader.ReadLine();
 
             Console.WriteLine(response);
 
